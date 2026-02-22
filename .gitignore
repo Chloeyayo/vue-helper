@@ -3,3 +3,5 @@ node_modules
 *.tsbuildinfo
 .vscode-test-web
 helper.json
+dist/
+.claude/

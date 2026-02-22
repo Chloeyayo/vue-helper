@@ -308,15 +308,6 @@ class VueHelperDefinitionProvider implements DefinitionProvider {
         if (loc) return loc
       }
 
-      // Fallback: search vueFiles in memory (no glob)
-      const fallbackFile = explorer.vueFilesByNormalizedName.get(normalizedTag)
-      if (fallbackFile) {
-        let filePath = fallbackFile.path.replace(explorer.prefix.alias, explorer.prefix.path)
-        const fullPath = path.join(explorer.projectRootPath, filePath)
-        if (fs.existsSync(fullPath)) {
-          return new Location(Uri.file(fullPath), new Position(0, 0))
-        }
-      }
     }
 
     return null

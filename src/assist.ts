@@ -1,4 +1,4 @@
-import { commands, window, workspace, Position, TextEditor, Selection, Range } from 'vscode'
+import { commands, window, workspace, Position, TextEditor, TextEditorEdit, Selection, Range } from 'vscode'
 import ExplorerProvider from './explorer'
 import * as native from './native'
 
@@ -64,7 +64,7 @@ export default class Assist {
     if (result) {
       if (result.actionType === 'snippet') {
         const line = editor.document.lineAt(position.line)
-        editor.edit((editBuilder: any) => {
+        editor.edit((editBuilder: TextEditorEdit) => {
           editBuilder.replace(line.range, result.insertText)
         }).then(() => {
           if (result.cursorLine && result.cursorChar) {
@@ -75,7 +75,7 @@ export default class Assist {
           }
         })
       } else {
-        editor.edit((editBuilder: any) => {
+        editor.edit((editBuilder: TextEditorEdit) => {
           editBuilder.insert(position, result.insertText)
         }).then(() => {
           editor.selection = new Selection(
@@ -102,7 +102,7 @@ export default class Assist {
 
     const edit = native.computeBackspace(lines, position.line, position.character)
     if (edit) {
-      editor.edit((editBuilder: any) => {
+      editor.edit((editBuilder: TextEditorEdit) => {
         const range = new Range(
           new Position(edit.startLine, edit.startChar),
           new Position(edit.endLine, edit.endChar)
@@ -155,7 +155,9 @@ export default class Assist {
     const txt = editor.document.lineAt(editor.selection.anchor.line).text
     // If current line is a component tag, trigger auto import
     if (/<.*>\s?<\/.*>/gi.test(txt.trim()) || /<.*\/>/gi.test(txt.trim())) {
-      this.autoImportComponent(txt, editor, editor.selection.anchor.line)
+      if (config.get('autoImport') as boolean ?? true) {
+        this.autoImportComponent(txt, editor, editor.selection.anchor.line)
+      }
       return
     }
     this.funcEnhance()
@@ -211,7 +213,7 @@ export default class Assist {
 
   private insertImportWithComponents(editor: TextEditor, name: string, importString: string, importLine: number, countLine: number) {
     let line = importLine
-    let prorityInsertLine = 0
+    let priorityInsertLine = 0
     let secondInsertLine = 0
     let hasComponents = false
     const tabSize = this.explorer.tabSize
@@ -250,16 +252,16 @@ export default class Assist {
         secondInsertLine = line
       }
       if (/\s*data\s*\(\s*\)\s*\{\s*/gi.test(trimmed)) {
-        prorityInsertLine = line
+        priorityInsertLine = line
       }
       line++
     }
 
     // No existing components section found, create one
-    if (prorityInsertLine > 0) {
+    if (priorityInsertLine > 0) {
       editor.edit((editBuilder) => {
         editBuilder.insert(new Position(importLine - 1, 0), importString)
-        editBuilder.insert(new Position(prorityInsertLine - 1, editor.document.lineAt(prorityInsertLine - 1).text.length), `\n${tabSize}components: { ${name} },`)
+        editBuilder.insert(new Position(priorityInsertLine - 1, editor.document.lineAt(priorityInsertLine - 1).text.length), `\n${tabSize}components: { ${name} },`)
       })
     } else if (secondInsertLine > 0) {
       editor.edit((editBuilder) => {
@@ -313,7 +315,7 @@ export default class Assist {
       }
     }
 
-    editor.edit((editBuilder: any) => {
+    editor.edit((editBuilder: TextEditorEdit) => {
       editBuilder.insert(new Position(insertLine, 0), importStatement + '\n')
       if (componentsLine >= 0 && componentsOneLine) {
         const lineText = lines[componentsLine]

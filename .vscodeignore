@@ -17,3 +17,4 @@ rust-core/Cargo.lock
 rust-core/Cargo.toml
 rust-core/build.rs
 rust-core/.gitignore
+*.vsix

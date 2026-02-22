@@ -49,7 +49,7 @@ export default class ExplorerProvider {
   }
 
   public getActiveEditorDir(activePath: string) {
-    return activePath.replace(this.projectRootPathReg, '').replace(/[\/|\\]\w*\.\w*$/gi, '')
+    return activePath.replace(this.projectRootPathReg, '').replace(/[\/\\]\w*\.\w*$/gi, '')
   }
 
   public getVueRelativePath(activeEditorPath: string, vuePath: string) {

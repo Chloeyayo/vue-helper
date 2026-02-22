@@ -23,27 +23,28 @@ export default class MonitorProvider {
     try {
       this.userPath = path.join(this.explorer.context.extensionPath, 'asset/user.json')
       const user =  fs.readFileSync(this.userPath, 'utf-8')
-      let today = new Date().getDate()
+      let today = new Date().toISOString().slice(0, 10)
       if (user) {
         this.user = JSON.parse(user)
       }
       let canSend = false
       if (!this.user.id) {
         this.user.id = uuid()
-        this.user.active = today.toString()
+        this.user.active = today
         fs.writeFileSync(this.userPath, JSON.stringify(this.user), 'utf-8')
         canSend = true
       } else {
-        if (parseInt(this.user.active) !== today) {
+        if (this.user.active !== today) {
           canSend = true
-          this.user.active = today.toString()
+          this.user.active = today
           fs.writeFileSync(this.userPath, JSON.stringify(this.user), 'utf-8')
         }
       }
       if (canSend) {
         this.active()
       }
-    } catch (_error: any) {
+    } catch (error: any) {
+      console.error('[vue-helper] MonitorProvider init failed:', error?.message || error)
     }
   }
 
