@@ -1,0 +1,13 @@
+{
+  "extentions.blockSelect": "vue-helper: blockSelect",
+  "extension.form": "vue-helper: Form",
+  "extension.block": "vue-helper: Upload Block",
+  "extension.common": "vue-helper",
+  "common.position": "Go to Position",
+  "common.link": "Open Link",
+  "common.refresh": "Refresh",
+  "add.component": "vue-helper: Add Component",
+  "add.page": "vue-helper: Add Page",
+  "add.file": "vue-helper: Add File",
+  "upload.component": "vue-helper: Upload Component"
+}

@@ -1,0 +1,13 @@
+{
+  "extentions.blockSelect": "vue-helper: 块选择",
+  "extension.form": "vue-helper: 表单",
+  "extension.block": "vue-helper: 上传代码块",
+  "extension.common": "vue-helper",
+  "common.position": "跳转到位置",
+  "common.link": "打开链接",
+  "common.refresh": "刷新",
+  "add.component": "vue-helper: 添加组件",
+  "add.page": "vue-helper: 添加页面",
+  "add.file": "vue-helper: 添加文件",
+  "upload.component": "vue-helper: 上传组件"
+}
